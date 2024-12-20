@@ -33,6 +33,7 @@ export default function WeatherCard({
     sea_level,
   } = weatherInformation;
 
+  console.log(name);
   const temperatureRound = Math.round(temperature);
   const min_temperature = Math.round(minTemperature);
   const max_temperature = Math.round(maxTemperature);

@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import WeatherCard from "./WeatherCard";
+import { PropagateLoader } from "react-spinners";
 
 const WeatherApi = ({ searchValue }: { searchValue: string }) => {
+  const [loading, setLoading] = useState<boolean>(true);
+
   const [weatherInformation, setWeatherInformation] = useState<
     | {
         name: string;
@@ -32,6 +35,7 @@ const WeatherApi = ({ searchValue }: { searchValue: string }) => {
         );
       }
       const weatherData = await response.json();
+      await setLoading(false);
       const { name } = weatherData;
       const { temp, feels_like, humidity, temp_min, temp_max, sea_level } =
         weatherData.main;
@@ -68,13 +72,17 @@ const WeatherApi = ({ searchValue }: { searchValue: string }) => {
 
   return (
     <>
-      {weatherInformation ? (
-        <WeatherCard weatherInformation={weatherInformation} />
+      {!weatherInformation || loading ? (
+        <div className="absolute top-[60%] left-0 w-full  flex items-center justify-center ">
+          <PropagateLoader
+            color="#F7f7f7f7"
+            cssOverride={{}}
+            size={18}
+            speedMultiplier={1}
+          />
+        </div>
       ) : (
-        <h2 className="text-3xl text-center font-bold text-white">
-          No <span className="text-yellow-400 text-4xl ">Data</span> Fond 🤷‍♂️ try
-          again
-        </h2>
+        <WeatherCard weatherInformation={weatherInformation} />
       )}
     </>
   );

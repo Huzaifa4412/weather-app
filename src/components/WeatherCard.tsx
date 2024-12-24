@@ -1,22 +1,7 @@
-export default function WeatherCard({
-  weatherInformation,
-}: {
-  weatherInformation: {
-    name: string;
-    temperature: number;
-    feelsLike: number;
-    humidity: number;
-    minTemperature: number;
-    maxTemperature: number;
-    weatherMood: string;
-    windSpeed: number;
-    country: string;
-    sunrise: number;
-    sunset: number;
-    clouds: string;
-    sea_level: number;
-  };
-}) {
+import { useContext } from "react";
+import ApiFetching from "../context/apiFetching";
+export default function WeatherCard() {
+  const { weatherInformation } = useContext(ApiFetching);
   const {
     name,
     temperature,
@@ -31,12 +16,11 @@ export default function WeatherCard({
     clouds,
     sunset,
     sea_level,
-  } = weatherInformation;
+  } = weatherInformation ?? {};
 
-  console.log(name);
-  const temperatureRound = Math.round(temperature);
-  const min_temperature = Math.round(minTemperature);
-  const max_temperature = Math.round(maxTemperature);
+  const temperatureRound = Math.round(temperature ?? 0);
+  const min_temperature = Math.round(minTemperature ?? 0);
+  const max_temperature = Math.round(maxTemperature ?? 0);
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
       <div className="flex justify-between items-center mb-4">
@@ -89,7 +73,7 @@ export default function WeatherCard({
         <WeatherDetail
           icon={"wi wi-thermometer"}
           label="Feels Like"
-          value={feelsLike.toString()}
+          value={feelsLike?.toString() ?? ""}
         />
         <WeatherDetail
           icon={"wi wi-thermometer-exterior"}
@@ -99,32 +83,32 @@ export default function WeatherCard({
         <WeatherDetail
           icon={"wi wi-humidity"}
           label="Humidity"
-          value={humidity.toString()}
+          value={humidity?.toString() ?? ""}
         />
         <WeatherDetail
           icon={"wi wi-sunrise"}
           label="Sun Rise"
-          value={new Date(sunrise * 1000).toLocaleTimeString()}
+          value={new Date(sunrise || 0 * 1000).toLocaleTimeString()}
         />
         <WeatherDetail
           icon={"wi wi-strong-wind"}
           label="Wind Speed"
-          value={windSpeed.toString()}
+          value={windSpeed?.toString() ?? ""}
         />
         <WeatherDetail
           icon={"wi wi-sunset"}
           label="Sun Set"
-          value={new Date(sunset * 1000).toLocaleTimeString()}
+          value={new Date(sunset ?? 0 * 1000).toLocaleTimeString()}
         />
         <WeatherDetail
           icon={"wi wi-cloud"}
           label="clouds"
-          value={clouds.toString() + " %"}
+          value={clouds?.toString() + " %"}
         />
         <WeatherDetail
           icon={"wi wi-barometer"}
           label="Sea Level"
-          value={(sea_level / 100).toString() + " m"}
+          value={(sea_level ?? 0 / 100).toString() + " m"}
         />
       </div>
     </div>

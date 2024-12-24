@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import WeatherCard from "./WeatherCard";
 import { PropagateLoader } from "react-spinners";
+import ApiFetching from "../context/apiFetching";
 
 const WeatherApi = ({ searchValue }: { searchValue: string }) => {
   const [loading, setLoading] = useState<boolean>(true);
@@ -24,7 +25,7 @@ const WeatherApi = ({ searchValue }: { searchValue: string }) => {
     | undefined
   >(undefined);
 
-  const getData = async () => {
+  const getData = useCallback(async () => {
     try {
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?&units=metric&q=${searchValue.toLowerCase()}&appid=4190189464944ecf9995818b0d3e3854`
@@ -64,11 +65,10 @@ const WeatherApi = ({ searchValue }: { searchValue: string }) => {
     } catch (err) {
       console.error(err);
     }
-  };
-
+  }, [searchValue]);
   useEffect(() => {
     getData();
-  });
+  }, [searchValue, getData]);
 
   return (
     <>
@@ -82,7 +82,9 @@ const WeatherApi = ({ searchValue }: { searchValue: string }) => {
           />
         </div>
       ) : (
-        <WeatherCard weatherInformation={weatherInformation} />
+        <ApiFetching.Provider value={{ weatherInformation }}>
+          <WeatherCard />
+        </ApiFetching.Provider>
       )}
     </>
   );
